@@ -1,47 +1,61 @@
-import { Calendar, Home, Inbox, Mail, Search, Settings } from "lucide-react";
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { BookOpen, Home, Users } from "lucide-react";
 
 import {
-  Sidebar,
+  Sidebar as SidebarPrimitive,
   SidebarContent,
   SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 
-const items = [
-  { title: "Home", url: "/", icon: Home },
-  { title: "Inbox", url: "#", icon: Inbox },
-  { title: "Calendar", url: "#", icon: Calendar },
-  { title: "Email", url: "#", icon: Mail },
-  { title: "Search", url: "#", icon: Search },
-  { title: "Settings", url: "#", icon: Settings },
+const menuItems = [
+  { label: "Beranda", href: "/", icon: Home },
+  { label: "Dashboard", href: "/dashboard", icon: Users },
+  { label: "Kelas", href: "/kelas", icon: BookOpen },
 ];
 
 export function AppSidebar() {
+  const pathname = usePathname();
+
   return (
-    <Sidebar>
+    <SidebarPrimitive>
+      <SidebarHeader className="border-b px-4 py-3">
+        <Link href="/" className="flex items-center gap-2 font-semibold">
+          <span className="flex size-8 items-center justify-center rounded-lg bg-blue-600 text-sm text-white">
+            MS
+          </span>
+          <span>Manajemen Siswa</span>
+        </Link>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Applications</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+          <SidebarGroupLabel>Navigasi</SidebarGroupLabel>
+          <SidebarMenu>
+            {menuItems.map(({ label, href, icon: Icon }) => (
+              <SidebarMenuItem key={href}>
+                <SidebarMenuButton
+                  asChild
+                  isActive={pathname === href || (href !== "/" && pathname.startsWith(`${href}/`))}
+                >
+                  <Link href={href}>
+                    <Icon aria-hidden="true" />
+                    <span>{label}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            ))}
+          </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-    </Sidebar>
+    </SidebarPrimitive>
   );
 }
+
+export default AppSidebar;
